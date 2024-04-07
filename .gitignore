@@ -1,0 +1,9 @@
+# Exclude build files
+/target
+
+# Exclude test files
+*.tar
+*.txt
+
+# Exclude IDE files
+/.vscode

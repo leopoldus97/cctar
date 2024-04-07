@@ -38,6 +38,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         for file in archive.files {
             println!("{}", file.file_name);
         }
+    } else if args.extract {
+        // Extract files
+        let archive = load_archive(args.file)?;
+        for file in archive.files {
+            let mut f = File::create(file.file_name)?;
+            f.write(file.body.as_bytes())?;
+        }
     }
 
     Ok(())

@@ -6,6 +6,8 @@ pub struct Arguments {
     pub list: bool,
     pub file: Option<String>,
     pub extract: bool,
+    pub create: bool,
+    pub input_files: Vec<String>,
 }
 
 pub fn setup_parser() -> Result<Arguments, Box<dyn Error>> {
@@ -31,6 +33,19 @@ pub fn setup_parser() -> Result<Arguments, Box<dyn Error>> {
                 .num_args(0)
                 .help("Extracts the contents of an archive")
                 .conflicts_with_all(&["list", "create"]),
+            Arg::new("create")
+                .short('c')
+                .long("create")
+                .num_args(0)
+                .help("Creates a new archive")
+                .conflicts_with_all(&["extract", "list"])
+                .requires("file"),
+            Arg::new("input_files")
+                .index(1)
+                .num_args(1..)
+                .required(false)
+                .help("Input files to be added to the archive")
+                .conflicts_with_all(&["list", "extract"]),
         ])
         .get_matches();
 
@@ -45,10 +60,24 @@ pub fn setup_parser() -> Result<Arguments, Box<dyn Error>> {
         .get_one::<bool>("extract")
         .map(|extract| *extract)
         .unwrap_or_else(|| false);
+    let create = matches
+        .get_one::<bool>("create")
+        .map(|create| *create)
+        .unwrap_or_else(|| false);
+    let input_files = matches
+        .get_many::<String>("input_files")
+        .map(|values| {
+            values
+                .map(|value| value.to_string())
+                .collect::<Vec<String>>()
+        })
+        .unwrap_or_default();
 
     Ok(Arguments {
         list,
         file,
         extract,
+        create,
+        input_files,
     })
 }

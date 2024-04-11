@@ -19,7 +19,7 @@ pub fn setup_parser() -> Result<Arguments, Box<dyn Error>> {
                 .long("list")
                 .num_args(0)
                 .help("Lists the contents of an archive")
-                .conflicts_with_all(&["extract", "create"]),
+                .conflicts_with_all(["extract", "create"]),
             Arg::new("file")
                 .short('f')
                 .long("file")
@@ -32,38 +32,29 @@ pub fn setup_parser() -> Result<Arguments, Box<dyn Error>> {
                 .alias("get")
                 .num_args(0)
                 .help("Extracts the contents of an archive")
-                .conflicts_with_all(&["list", "create"]),
+                .conflicts_with_all(["list", "create"]),
             Arg::new("create")
                 .short('c')
                 .long("create")
                 .num_args(0)
                 .help("Creates a new archive")
-                .conflicts_with_all(&["extract", "list"])
+                .conflicts_with_all(["extract", "list"])
                 .requires("file"),
             Arg::new("input_files")
                 .index(1)
                 .num_args(1..)
                 .required(false)
                 .help("Input files to be added to the archive")
-                .conflicts_with_all(&["list", "extract"]),
+                .conflicts_with_all(["list", "extract"]),
         ])
         .get_matches();
 
-    let list = matches
-        .get_one::<bool>("list")
-        .map(|list| *list)
-        .unwrap_or_else(|| false);
+    let list = matches.get_one::<bool>("list").copied().unwrap_or(false);
     let file = matches
         .get_one::<String>("file")
         .map(|file| file.to_string());
-    let extract = matches
-        .get_one::<bool>("extract")
-        .map(|extract| *extract)
-        .unwrap_or_else(|| false);
-    let create = matches
-        .get_one::<bool>("create")
-        .map(|create| *create)
-        .unwrap_or_else(|| false);
+    let extract = matches.get_one::<bool>("extract").copied().unwrap_or(false);
+    let create = matches.get_one::<bool>("create").copied().unwrap_or(false);
     let input_files = matches
         .get_many::<String>("input_files")
         .map(|values| {

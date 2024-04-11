@@ -3,7 +3,7 @@
 
 # Exclude test files
 *.tar
-*.txt
+/original_files
 
 # Exclude IDE files
 /.vscode

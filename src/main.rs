@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let archive = load_archive(args.file)?;
         for file in archive.files {
             let mut f = File::create(file.file_name)?;
-            f.write(file.body.as_bytes())?;
+            f.write_all(&file.body)?;
         }
     } else if args.create {
         // Create archive

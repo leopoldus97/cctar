@@ -12,6 +12,7 @@ pub struct Arguments {
 
 pub fn setup_parser() -> Result<Arguments, Box<dyn Error>> {
     let matches = Command::new("cctar")
+        .about("Simple tar-like utility written in Rust")
         .version("0.1.0")
         .args([
             Arg::new("list")
